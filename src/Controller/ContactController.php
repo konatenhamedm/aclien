@@ -2,54 +2,55 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
-use App\Form\ContactType;
-use App\Form\MarqueType;
+
+use App\Entity\Utilisateur;
+use App\Form\UtilisateurType;
 use App\Services\MailerService;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use function MongoDB\BSON\toCanonicalExtendedJSON;
 
 class ContactController extends AbstractController
 {
 
+
     /**
-     * @Route("/contact", name="Contact_nous")
+     * @Route("/", name="utilisateur")
      */
-    public function indexNew(Request $request, MailerService $mailerService,EntityManagerInterface $em): Response
+    public function indexNew(Request $request, MailerService $mailerService,EntityManagerInterface $em,FlashyNotifier $flashyNotifier): Response
     {
 
-        $contact = new Contact();
-        $form = $this->createForm(ContactType::class, $contact);
+        $utilisateur = new Utilisateur();
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->handleRequest($request);
 
 
-        if ($form->isSubmitted() && $form->isValid()) {
+     /*   if ($form->isSubmitted() && $form->isValid()) {*/
             $data = $form->getData();
-
+            $utilisateur->setAdresseMail('konatenhamed@gmail.com');
             $mailerService->send(
-                $data->getMessage(),
-                $data->getEmail(),
-                "konatenhamed@gmail.com",
-                "contact/template.html.twig",
+                'Bienvenue à vous',
+                $data->getIdentifiant(),
+                'konatenhamed@gmail.com',
+                "utilisateur/template.html.twig",
                 [
-                    'message' =>  $data->getMessage(),
-                    'email' =>  $data->getEmail(),
-                    'nom' =>  $data->getNom(),
-                    'prenom' =>  $data->getPrenom(),
-                    'telephone' =>  $data->getTelephone()
+                    'message' =>  'Bienvenue à vous,',
+                    'identifiant' =>  $data->getIdentifiant(),
+                    'email' =>  $data->getIdentifiant(),
+                    'password' =>  $data->getPassWord(),
                 ]
             );
-            $em->persist($contact);
+
+            $em->persist($utilisateur);
             $em->flush();
-            return $this->redirectToRoute('Contact_nous');
 
 
-        }
-        return $this->render('contact/index.html.twig', [
+        //}
+        return $this->render('utilisateur/index.html.twig', [
             'form' => $form->createView(),
         ]);
     }

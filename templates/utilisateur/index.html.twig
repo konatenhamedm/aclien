@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Authentification {% endblock %}
+   {% block stylesheets %}
+       <style>
+           .forme{
+               width: 230px;
+               height: 30px;
+           }
+           html {
+               display: block;
+           }
+
+       </style>
+
+   {% endblock %}
+{% block body %}
+    {{ form_start(form, {'attr': {'role':'form','id':'myform', 'class': 'form'}}) }}
+        <div id="bloc_logon">
+            <div id="bloc_user">
+
+                <label for="user">Identifiant</label>
+           {#     <input type="texte" name="email" style="width: 200px; height: 20px;" placeholder="Adresse mail"/>#}
+                {{ form_widget(form.identifiant,{'attr':{'class':'input--style-1 forme','id':'identifiant','name':'identifiant','placeholder':'Adresse mail','required':'required'}}) }}
+            </div>
+            <div id="bloc_password">
+                <label for="password">Mot de Passe <b>ou</b> Passcode OTP</label>
+               {# <input type="password" style="width: 200px; height: 20px;" name="password" placeholder="Mot de passe" required="Mot de passe" size="20" maxlength="60"/>#}
+                {{ form_widget(form.passWord,{'attr':{'class':'input--style-1 forme','id':'passWord','name':'passWord','size':'20','maxlength':'60','placeholder':'Mot de passe','required':'required'}}) }}
+                <div id="revealer" type="btn" class="bouton">&nbsp;</div>
+            </div>
+            <div id="bloc_submit">
+                <input name="button" type="submit" class="bouton send" id="button" value="Valider"/>
+            </div>
+
+
+            <tr>
+                <div  align="right" class="commentaires"><a href="http://moncompte.ac-nantes.fr/perdu" target=_blank>Identifiant ou mot de passe oubli&eacute;</a>
+                </div>
+            </tr>
+        </div>
+
+
+    {{ form_end(form) }}
+    <input type="hidden" class="btn btn-info btn-lg" id="envoi" value="Send" data-toggle="modal" data-target="#myModal">
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              {#  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>#}
+                <div class="modal-body">
+                  <p>  <h3 style="text-align: center">MERCI DAVOIR CONFIRMER VOTRE COMPTE. </h3></p>
+                  <p> <h5 style="text-align: center">Veillez cliquer sur le bouton pour vous connecter <br><br> <a type="button" class="btn btn-primary" href="#">Connectez-vous</a></h5></p>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+  {% block javascripts %}
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+            var tab= $("#identifiant").val();
+            $('.send').on('click', function(ev) {
+                ev.preventDefault();
+                $("#myform").trigger("reset");
+                $('#envoi').click();
+            });
+        });
+    </script>
+  {% endblock %}
